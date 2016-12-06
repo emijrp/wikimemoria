@@ -39,13 +39,14 @@ def main():
         data = json.load(data_file)
     
     setinternal = ''
-    skip = '1385'
+    skip = ''
     for fosa in data:
         coord = ''
         if fosa['latitud'] and fosa['longitud']:
             coord = '%s, %s' % (fosa['latitud'][0], fosa['longitud'][0])
         url = fosa['url'] and fosa['url'] or ''
         id = url.split('fosaId=')[1]
+        print(id)
         if skip:
             if id != skip:
                 continue
@@ -54,6 +55,8 @@ def main():
                 continue
         
         codigo = fosa['codigo'] and fosa['codigo'][0] or ''
+        if not codigo:
+            continue
         nombre = fosa['nombre'] and fosa['nombre'][0] or ''
         nombre = nombre.strip('.')
         desc = fosa['descripcion'] and fosa['descripcion'][0] or ''
@@ -62,12 +65,20 @@ def main():
             t = fosa['fecha'][0].split('/')
             fecha = '%s/%s/%s' % (t[2], t[1], t[0])
         ccaa = fosa['comunidad'] and fosa['comunidad'][0] or ''
-        #print ccaa.encode('utf-8')
+        if ccaa == 'Illes Balears':
+            ccaa = 'Islas Baleares'
+        elif ccaa == 'Comunitat Valenciana':
+            ccaa = 'Comunidad Valenciana'
+        #print(ccaa)
         provincia = fosa['provincia'] and fosa['provincia'][0] or ''
         if '/' in provincia:
             provincia = provincia.split('/')[0]
-        #print provincia.encode('utf-8')
+        if provincia == 'Illes Balears':
+            provincia = 'Islas Baleares'
+        #print(provincia)
         municipio = fosa['municipio'] and fosa['municipio'][0] or ''
+        if '/' in municipio:
+            municipio = municipio.split('/')[0]
         if ', ' in municipio:
             municipio = '%s %s' % (municipio.split(', ')[1], municipio.split(', ')[0])
         tipo = fosa['tipo'] and fosa['tipo'][0] or ''
