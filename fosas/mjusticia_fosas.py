@@ -39,12 +39,20 @@ def main():
         data = json.load(data_file)
     
     setinternal = ''
+    skip = '1385'
     for fosa in data:
         coord = ''
         if fosa['latitud'] and fosa['longitud']:
             coord = '%s, %s' % (fosa['latitud'][0], fosa['longitud'][0])
         url = fosa['url'] and fosa['url'] or ''
         id = url.split('fosaId=')[1]
+        if skip:
+            if id != skip:
+                continue
+            else:
+                skip = ''
+                continue
+        
         codigo = fosa['codigo'] and fosa['codigo'][0] or ''
         nombre = fosa['nombre'] and fosa['nombre'][0] or ''
         nombre = nombre.strip('.')
